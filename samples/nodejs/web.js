@@ -24,6 +24,7 @@ app.post('/', function (req, res) {
 		manualCMD = '';
 	} else {
 		res.send(findBestMove(req.body));
+		console.log(req.body)
 		myDir = req.body.arena.state[req.body._links.self.href].direction
 	}
 });
@@ -113,7 +114,7 @@ function turnDirection(turn, curDir) {
 }
 
 function findBestMove(data) {
-	let mystate = data.arena.state[data._links.self.href]
+	let myState = data.arena.state[data._links.self.href]
 	let closest = {
 		N: {y: 0},
 		S: {y: Number.MAX_SAFE_INTEGER},
@@ -127,29 +128,29 @@ function findBestMove(data) {
 		}
 		ps = data.arena.state[p]
 		ps.p = p
-		if(ps.x != mystate.x && ps.y != mystate.y) {
+		if(ps.x != myState.x && ps.y != myState.y) {
 			continue; // in diagonal
 		}
 
-		if(ps.x==mystate.x && ps.y < mystate.y && ps.y >= closest.N.y) {
-			ps.distance = mystate.y - ps.y
+		if(ps.x==myState.x && ps.y < myState.y && ps.y >= closest.N.y) {
+			ps.distance = myState.y - ps.y
 			closest.N = ps
 		}
-		else if(ps.x==mystate.x && ps.y > mystate.y && ps.y <= closest.S.y) {
-			ps.distance = ps.y - mystate.y
+		else if(ps.x==myState.x && ps.y > myState.y && ps.y <= closest.S.y) {
+			ps.distance = ps.y - myState.y
 			closest.S = ps
 		}
-		else if(ps.y==mystate.y && ps.x < mxstate.x && ps.x >= closest.W.x) {
-			ps.distance = mystate.x - ps.x
+		else if(ps.y==myState.y && ps.x < myState.x && ps.x >= closest.W.x) {
+			ps.distance = myState.x - ps.x
 			closest.W = ps
 		}
-		else if(ps.y==mystate.y && ps.x > mxstate.x && ps.x <= closest.E.x) {
-			ps.distance = ps.x - mystate.x
+		else if(ps.y==myState.y && ps.x > myState.x && ps.x <= closest.E.x) {
+			ps.distance = ps.x - myState.x
 			closest.E = ps
 		}
 	}
 
-	let closestInFront = closest[mystate.direction].distance
+	let closestInFront = closest[myState.direction].distance
 	if(closestInFront){
 		if(closestInFront <= shootingRange) {
 			return 'T'
@@ -158,12 +159,12 @@ function findBestMove(data) {
 		}
 	}
 
-	let closestInMyRight = closest[turnDirection('R', mystate.direction)].distance
+	let closestInMyRight = closest[turnDirection('R', myState.direction)].distance
 	if(closestInMyRight && closestInMyRight <= shootingRange) {
 		return 'R'
 	}
 
-	let closestInMyLeft = closest[turnDirection('L', mystate.direction)].distance
+	let closestInMyLeft = closest[turnDirection('L', myState.direction)].distance
 	if(closestInMyLeft && closestInMyLeft <= shootingRange) {
 		return 'L'
 	}
