@@ -23,7 +23,7 @@ app.post('/', function (req, res) {
 		myDir = nextDir;
 		manualCMD = '';
 	} else {
-		res.send(findBestMove(req.data));
+		res.send(findBestMove(req.body));
 		myDir = req.body.arena.state[req.body._links.self.href].direction
 	}
 });
